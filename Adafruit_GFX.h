@@ -25,6 +25,16 @@
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
+enum RectMode {
+  CORNER,
+  CORNERS,
+  RADIUS,
+  CENTER
+};
+
+typedef uint16_t color;
+
+
 class Adafruit_GFX : public Print {
  public:
 
@@ -85,6 +95,63 @@ class Adafruit_GFX : public Print {
   void setRotation(uint8_t r);
   uint8_t getRotation(void);
 
+  
+  /*
+   * Processing-like graphics primitives
+   */
+  
+  /// transforms a color in 16-bit form given the RGB components.
+  /// The transform is device-dependent, so this method must
+  /// be subclassed.
+  virtual uint16_t newColor(uint8_t red, uint8_t green, uint8_t blue);
+  
+  
+  // http://processing.org/reference/background_.html
+  void background(uint8_t red, uint8_t green, uint8_t blue);
+  void background(color c);
+
+  // http://processing.org/reference/fill_.html
+  void fill(uint8_t red, uint8_t green, uint8_t blue);
+  void fill(color c);
+
+  // http://processing.org/reference/noFill_.html
+  void noFill();
+
+  // http://processing.org/reference/stroke_.html
+  void stroke(uint8_t red, uint8_t green, uint8_t blue);
+  void stroke(color c);
+
+  // http://processing.org/reference/noStroke_.html
+  void noStroke();
+  
+  void text    (const char * text, int16_t x, int16_t y);
+  void textWrap(const char * text, int16_t x, int16_t y);
+
+  void textSize(uint8_t size);
+  
+  // similar to ellipse() in Processing, but with
+  // a single radius.
+  // http://processing.org/reference/ellipse_.html
+  void circle(int16_t x, int16_t y, int16_t r);
+  
+  void point(int16_t x, int16_t y);
+  
+  void line(int16_t x1, int16_t y1, int16_t x2, int16_t y2);
+  
+  void quad(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3, int16_t x4, int16_t y4);
+  
+  void rect(int16_t x, int16_t y, int16_t width, int16_t height);
+
+  void rect(int16_t x, int16_t y, int16_t width, int16_t height, int16_t radius);
+  
+  void triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3);
+  
+  void rectMode(RectMode mode);
+  
+  void pushStyle();
+  void popStyle();
+
+  
  protected:
   int16_t  WIDTH, HEIGHT;   // this is the 'raw' display w/h - never changes
   int16_t  _width, _height; // dependent on rotation
@@ -93,6 +160,18 @@ class Adafruit_GFX : public Print {
   uint8_t  textsize;
   uint8_t  rotation;
   boolean  wrap; // If set, 'wrap' text at right edge of display
+  
+  /*
+   * Processing-style graphics state
+   */
+  
+  color strokeColor;
+  bool useStroke;
+  color fillColor;
+  bool useFill;
 };
+
+
+
 
 #endif

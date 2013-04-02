@@ -26,6 +26,12 @@ void Adafruit_GFX::constructor(int16_t w, int16_t h) {
   textsize = 1;
   textcolor = textbgcolor = 0xFFFF;
   wrap = true;
+  
+  strokeColor = 0;
+  useStroke = true;
+  fillColor = 0;
+  useFill = false;
+
 }
 
 
@@ -465,4 +471,132 @@ int16_t Adafruit_GFX::width(void) {
  
 int16_t Adafruit_GFX::height(void) { 
   return _height; 
+}
+
+
+
+
+void Adafruit_GFX::background(uint8_t red, uint8_t green, uint8_t blue) {
+  background(newColor(red, green, blue));
+}
+
+void Adafruit_GFX::background(color c) {
+  fillScreen(c);
+}
+
+void Adafruit_GFX::stroke(uint8_t red, uint8_t green, uint8_t blue) {
+  stroke(newColor(red, green, blue));
+}
+
+void Adafruit_GFX::stroke(color c) {
+  useStroke = true;
+  strokeColor = c;
+  setTextColor(c);
+}
+
+void Adafruit_GFX::noStroke() {
+  useStroke = false;
+}
+
+void Adafruit_GFX::noFill() {
+  useFill = false;
+}
+
+void Adafruit_GFX::fill(uint8_t red, uint8_t green, uint8_t blue) {
+  fill(newColor(red, green, blue));
+}
+
+void Adafruit_GFX::fill(color c) {
+  useFill = true;
+  fillColor = c;
+}
+
+
+void Adafruit_GFX::text(const char * text, int16_t x, int16_t y) {
+  if (!useStroke)
+    return;
+  
+  setTextWrap(false);
+  setTextColor(strokeColor);
+  setCursor(x, y);
+  print(text);
+}
+
+void Adafruit_GFX::textWrap(const char * text, int16_t x, int16_t y) {
+  if (!useStroke)
+    return;
+  
+  setTextWrap(true);
+  setTextColor(strokeColor);
+  setCursor(x, y);
+  print(text);
+}
+
+
+void Adafruit_GFX::textSize(uint8_t size) {
+  setTextSize(size);
+}
+
+void Adafruit_GFX::point(int16_t x, int16_t y) {
+  if (!useStroke)
+    return;
+  
+  drawPixel(x, y, strokeColor);
+}
+
+void Adafruit_GFX::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
+  if (!useStroke)
+    return;
+  
+  if (x1 == x2) {
+    drawFastVLine(x1, y1, y2 - y1, strokeColor);
+  }
+  else if (y1 == y2) {
+    drawFastHLine(x1, y1, x2 - x1, strokeColor);
+  }
+  else {
+    drawLine(x1, y1, x2, y2, strokeColor);
+  }
+}
+
+void Adafruit_GFX::rect(int16_t x, int16_t y, int16_t width, int16_t height) {
+  if (useFill) {
+    fillRect(x, y, width, height, fillColor);
+  }
+  if (useStroke) {
+    drawRect(x, y, width, height, strokeColor);
+  }
+}
+
+void Adafruit_GFX::rect(int16_t x, int16_t y, int16_t width, int16_t height, int16_t radius) {
+  if (radius == 0) {
+    rect(x, y, width, height);
+  }
+  if (useFill) {
+    fillRoundRect(x, y, width, height, radius, fillColor);
+  }
+  if (useStroke) {
+    drawRoundRect(x, y, width, height, radius, strokeColor);
+  }
+}
+
+void Adafruit_GFX::circle(int16_t x, int16_t y, int16_t r) {
+  if (r == 0)
+    return;
+  
+  if (useFill) {
+    fillCircle(x, y, r, fillColor);
+  }
+  if (useStroke) {
+    drawCircle(x, y, r, strokeColor);
+  }
+}
+
+void Adafruit_GFX::triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3) {
+  if (useFill) {
+    fillTriangle(x1, y1, x2, y2, x3, y3, fillColor);
+  }
+  if (useStroke) {
+    drawTriangle(x1, y1, x2, y2, x3, y3, strokeColor);
+  }
 }

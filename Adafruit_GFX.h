@@ -104,8 +104,9 @@ class Adafruit_GFX : public Print {
    */
   
   /// transforms a color in 16-bit form given the RGB components.
-  /// The transform is device-dependent, so this method must
-  /// be subclassed.
+  /// The default implementation makes a 5-bit red, a 6-bit
+  /// green and a 5-bit blue (MSB to LSB). Devices that use
+  /// different scheme should override this. 
   virtual uint16_t newColor(uint8_t red, uint8_t green, uint8_t blue);
   
   

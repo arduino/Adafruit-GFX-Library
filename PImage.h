@@ -22,6 +22,8 @@ public:
   bool isValid() { return _valid; }
   
 private:
+  friend class Adafruit_GFX;
+  
   File _bmpFile;
   int  _bmpWidth, _bmpHeight;   // W+H in pixels
   uint8_t  _bmpDepth;              // Bit depth (currently must be 24)
@@ -39,7 +41,7 @@ private:
   _bmpImageoffset(bmpImageoffset),
   _rowSize(rowSize),
   _flip(flip),
-  _valid(true)
+  _valid(true) // since Adafruit_GFX is friend, we could just let it write the variables and save some CPU cycles
   { }
   
   // TODO close the file in ~PImage and PImage(const PImage&)

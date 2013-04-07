@@ -48,12 +48,12 @@ PImage PImage::loadImage(const char * fileName) {
     return PImage();
   }
   
-  Serial.println("File size: "); Serial.println(read32(bmpFile));
+  Serial.print("File size: "); Serial.println(read32(bmpFile));
   (void)read32(bmpFile); // Read & ignore creator bytes
   bmpImageoffset = read32(bmpFile); // Start of image data
-  Serial.println("Image Offset: "); Serial.println(bmpImageoffset, DEC);
+  Serial.print("Image Offset: "); Serial.println(bmpImageoffset, DEC);
   // Read DIB header
-  Serial.println("Header size: "); Serial.println(read32(bmpFile));
+  Serial.print("Header size: "); Serial.println(read32(bmpFile));
   bmpWidth  = read32(bmpFile);
   bmpHeight = read32(bmpFile);
   if(read16(bmpFile) != 1) { // # planes -- must be '1'
@@ -62,7 +62,7 @@ PImage PImage::loadImage(const char * fileName) {
   }
   
   bmpDepth = read16(bmpFile); // bits per pixel
-  Serial.println("Bit Depth: "); Serial.println(bmpDepth);
+  Serial.print("Bit Depth: "); Serial.println(bmpDepth);
   if((bmpDepth != 24) || (read32(bmpFile) != 0)) { // 0 = uncompressed {
     Serial.println("loadImage: invalid pixel format");
     return PImage();

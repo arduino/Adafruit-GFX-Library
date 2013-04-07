@@ -41,6 +41,8 @@ private:
   _flip(flip),
   _valid(true)
   { }
+  
+  // TODO close the file in ~PImage and PImage(const PImage&)
 
 };
 

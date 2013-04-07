@@ -25,15 +25,16 @@
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
+/* TODO
 enum RectMode {
   CORNER,
   CORNERS,
   RADIUS,
   CENTER
 };
+*/
 
 typedef uint16_t color;
-
 
 class Adafruit_GFX : public Print {
  public:
@@ -146,10 +147,12 @@ class Adafruit_GFX : public Print {
   
   void triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t x3, int16_t y3);
   
+  /* TODO
   void rectMode(RectMode mode);
   
   void pushStyle();
   void popStyle();
+  */
 
   
  protected:

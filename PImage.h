@@ -31,7 +31,7 @@ private:
   
   bool     _valid;
   
-  PImage(File bmpFile, int bmpWidth, int bmpHeight, uint8_t  bmpDepth, uint32_t bmpImageoffset, uint32_t rowSize, bool     flip) : 
+  PImage(File & bmpFile, int bmpWidth, int bmpHeight, uint8_t  bmpDepth, uint32_t bmpImageoffset, uint32_t rowSize, bool     flip) : 
   _bmpFile(bmpFile),
   _bmpWidth(bmpWidth),
   _bmpHeight(bmpHeight),

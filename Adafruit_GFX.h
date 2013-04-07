@@ -23,6 +23,8 @@
  #include "WProgram.h"
 #endif
 
+#include "PImage.h"
+
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
 /* TODO
@@ -154,6 +156,9 @@ class Adafruit_GFX : public Print {
   void popStyle();
   */
 
+  PImage loadImage(const char * fileName) { return PImage::loadImage(fileName); }
+  
+  void image(PImage & img, uint16_t x, uint16_t y);
   
  protected:
   int16_t  WIDTH, HEIGHT;   // this is the 'raw' display w/h - never changes

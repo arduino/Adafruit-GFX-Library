@@ -600,3 +600,8 @@ void Adafruit_GFX::triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int1
     drawTriangle(x1, y1, x2, y2, x3, y3, strokeColor);
   }
 }
+
+
+void Adafruit_GFX::image(PImage & img, uint16_t x, uint16_t y) {
+  // TODO
+}

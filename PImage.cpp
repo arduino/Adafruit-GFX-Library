@@ -82,6 +82,5 @@ PImage PImage::loadImage(const char * fileName) {
     flip      = false;
   }
   
-  // TODO create object
-  return PImage();
+  return PImage(bmpFile, bmpWidth, bmpHeight, bmpDepth, bmpImageoffset, rowSize, flip);
 }

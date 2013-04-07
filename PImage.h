@@ -22,9 +22,26 @@ public:
   bool isValid() { return _valid; }
   
 private:
-  PImage(File _fileRef) : fileRef(_fileRef) { /* TODO read bitmap header */}
-  File fileRef;
+  File _bmpFile;
+  int  _bmpWidth, _bmpHeight;   // W+H in pixels
+  uint8_t  _bmpDepth;              // Bit depth (currently must be 24)
+  uint32_t _bmpImageoffset;        // Start of image data in file
+  uint32_t _rowSize;               // Not always = bmpWidth; may have padding
+  bool     _flip; 
+  
   bool     _valid;
+  
+  PImage(File bmpFile, int bmpWidth, int bmpHeight, uint8_t  bmpDepth, uint32_t bmpImageoffset, uint32_t rowSize, bool     flip) : 
+  _bmpFile(bmpFile),
+  _bmpWidth(bmpWidth),
+  _bmpHeight(bmpHeight),
+  _bmpDepth(bmpDepth),
+  _bmpImageoffset(bmpImageoffset),
+  _rowSize(rowSize),
+  _flip(flip),
+  _valid(true)
+  { }
+
 };
 
 #endif // _PIMAGE_H

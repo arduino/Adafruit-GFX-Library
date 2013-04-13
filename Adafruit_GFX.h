@@ -23,7 +23,15 @@
  #include "WProgram.h"
 #endif
 
-#include "PImage.h"
+// The PImage class represents an image stored in the SD card.
+// If the SD library is not imported, including it will cause
+// a compilation error.
+
+#if defined(__SD_H__)  // Sparkfun's SD library
+#  include "PImage.h"
+#else
+#  warning "The SD library was not found. loadImage() and image() won't be supported."
+#endif
 
 #define swap(a, b) { int16_t t = a; a = b; b = t; }
 
@@ -157,9 +165,11 @@ class Adafruit_GFX : public Print {
   void popStyle();
   */
 
+#if defined(__SD_H__)  // Sparkfun's SD library
   PImage loadImage(const char * fileName) { return PImage::loadImage(fileName); }
   
   void image(PImage & img, uint16_t x, uint16_t y);
+#endif
   
  protected:
   int16_t  WIDTH, HEIGHT;   // this is the 'raw' display w/h - never changes

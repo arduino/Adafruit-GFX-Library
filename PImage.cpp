@@ -2,6 +2,8 @@
 
 #include "PImage.h"
 
+#if defined(__SD_H__)  // Sparkfun's SD library
+
 
 // These read 16- and 32-bit types from the SD card file.
 // BMP data is stored little-endian, Arduino is little-endian too.
@@ -85,3 +87,5 @@ PImage PImage::loadImage(const char * fileName) {
   
   return PImage(bmpFile, bmpWidth, bmpHeight, bmpDepth, bmpImageoffset, rowSize, flip);
 }
+
+#endif

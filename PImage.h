@@ -3,9 +3,10 @@
 #ifndef _PIMAGE_H
 #define _PIMAGE_H
 
-#include <SD.h>
-
 class Adafruit_GFX;
+
+#if defined(__SD_H__)  // Sparkfun's SD library
+
 
 /// This class mimics Processing's PImage, but with fewer
 /// capabilities. It allows an image stored in the SD card to be
@@ -47,5 +48,7 @@ private:
   // TODO close the file in ~PImage and PImage(const PImage&)
 
 };
+
+#endif
 
 #endif // _PIMAGE_H

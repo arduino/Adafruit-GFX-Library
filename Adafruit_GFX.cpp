@@ -605,6 +605,8 @@ void Adafruit_GFX::triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int1
   }
 }
 
+#if defined(__SD_H__)  // Sparkfun's SD library
+
 #define BUFFPIXEL 20
 
 void Adafruit_GFX::image(PImage & img, uint16_t x, uint16_t y) {
@@ -659,3 +661,5 @@ void Adafruit_GFX::image(PImage & img, uint16_t x, uint16_t y) {
   } // end scanline
 
 }
+
+#endif

@@ -5,6 +5,8 @@
 
 class Adafruit_GFX;
 
+#include <SD.h>
+
 #if defined(__SD_H__)  // Sparkfun's SD library
 
 

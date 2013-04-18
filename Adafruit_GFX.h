@@ -24,8 +24,9 @@
 #endif
 
 // The PImage class represents an image stored in the SD card.
-// If the SD library is not imported, including it will cause
+// If the SD library is not in the include path, including it will cause
 // a compilation error.
+#include <SD.h>  // will raise a warning if not in the include search path
 
 #if defined(__SD_H__)  // Sparkfun's SD library
 #  include "PImage.h"

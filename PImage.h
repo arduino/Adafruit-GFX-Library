@@ -24,6 +24,9 @@ public:
   
   bool isValid() { return _valid; }
   
+  int width() { return _bmpWidth; }
+  int height() { return _bmpHeight; }
+  
 private:
   friend class Adafruit_GFX;
   

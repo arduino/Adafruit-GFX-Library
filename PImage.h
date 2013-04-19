@@ -15,7 +15,10 @@ class Adafruit_GFX;
 /// drawn to the display.
 class PImage {
 public:
-  PImage() : _valid(false) { }
+  PImage() : 
+    _valid(false), 
+    _bmpWidth(0), 
+    _bmpHeight(0) { }
   
   void draw(Adafruit_GFX & glcd, int16_t x, int16_t y);
   

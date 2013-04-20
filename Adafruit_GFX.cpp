@@ -553,10 +553,16 @@ void Adafruit_GFX::line(int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
     return;
   
   if (x1 == x2) {
-    drawFastVLine(x1, y1, y2 - y1, strokeColor);
+    if (y1 < y2)
+      drawFastVLine(x1, y1, y2 - y1, strokeColor);
+    else
+      drawFastVLine(x1, y2, y1 - y2, strokeColor);      
   }
   else if (y1 == y2) {
-    drawFastHLine(x1, y1, x2 - x1, strokeColor);
+    if (x1 < x2)
+      drawFastHLine(x1, y1, x2 - x1, strokeColor);
+    else
+      drawFastHLine(x2, y1, x1 - x2, strokeColor);
   }
   else {
     drawLine(x1, y1, x2, y2, strokeColor);

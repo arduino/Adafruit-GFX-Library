@@ -13,6 +13,7 @@ class Adafruit_GFX;
 /// This class mimics Processing's PImage, but with fewer
 /// capabilities. It allows an image stored in the SD card to be
 /// drawn to the display.
+/// @author Enrico Gueli <enrico.gueli@gmail.com>
 class PImage {
 public:
   PImage() : 

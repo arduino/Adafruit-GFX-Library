@@ -9,6 +9,7 @@
  by purchasing products from Adafruit!
  
  Written by Limor Fried/Ladyada for Adafruit Industries.
+ Processing-like API written by Enrico Gueli for Officine Arduino.
  BSD license, check license.txt for more information.
  All text above must be included in any redistribution.
  ******************************************************************/

@@ -24,11 +24,6 @@
  #include "WProgram.h"
 #endif
 
-// The PImage class represents an image stored in the SD card.
-// If the SD library is not in the include path, including it will cause
-// a compilation error.
-#include <SD.h>  // will raise a warning if not in the include search path
-
 #if defined(__SD_H__)  // Sparkfun's SD library
 #  include "PImage.h"
 #else
@@ -192,6 +187,150 @@ class Adafruit_GFX : public Print {
   bool useFill;
 };
 
+#if defined(__SD_H__)  // Sparkfun's SD library
+
+#define BUFFPIXEL 20
+
+void Adafruit_GFX::image(PImage & img, uint16_t x, uint16_t y) {
+  int      w, h, row, col;
+  uint8_t  r, g, b;
+  uint32_t pos = 0;
+  uint8_t  sdbuffer[3*BUFFPIXEL]; // pixel buffer (R+G+B per pixel)
+  uint8_t  buffidx = sizeof(sdbuffer); // Current position in sdbuffer
+
+  // Crop area to be loaded
+  w = img._bmpWidth;
+  h = img._bmpHeight;
+  if((x+w-1) >= width())  w = width()  - x;
+  if((y+h-1) >= height()) h = height() - y;
+
+  /*
+  // Set TFT address window to clipped image bounds
+  setAddrWindow(x, y, x+w-1, y+h-1);
+  */
+  
+  for (row=0; row<h; row++) { // For each scanline...
+    // Seek to start of scan line.  It might seem labor-
+    // intensive to be doing this on every line, but this
+    // method covers a lot of gritty details like cropping
+    // and scanline padding.  Also, the seek only takes
+    // place if the file position actually needs to change
+    // (avoids a lot of cluster math in SD library).
+    if(img._flip) // Bitmap is stored bottom-to-top order (normal BMP)
+      pos = img._bmpImageoffset + (img._bmpHeight - 1 - row) * img._rowSize;
+    else     // Bitmap is stored top-to-bottom
+      pos = img._bmpImageoffset + row * img._rowSize;
+    if(img._bmpFile.position() != pos) { // Need seek?
+      img._bmpFile.seek(pos);
+      buffidx = sizeof(sdbuffer); // Force buffer reload
+    }
+
+    for (col=0; col<w; col++) { // For each pixel...
+      // Time to read more pixel data?
+      if (buffidx >= sizeof(sdbuffer)) { // Indeed
+        img._bmpFile.read(sdbuffer, sizeof(sdbuffer));
+        buffidx = 0; // Set index to beginning
+      }
+
+      // Convert pixel from BMP to TFT format, push to display
+      b = sdbuffer[buffidx++];
+      g = sdbuffer[buffidx++];
+      r = sdbuffer[buffidx++];
+      //pushColor(tft.Color565(r,g,b));
+      drawPixel(x + col, y + row, newColor(r, g, b));
+      
+    } // end pixel
+  } // end scanline
+
+}
+
+
+
+
+// These read 16- and 32-bit types from the SD card file.
+// BMP data is stored little-endian, Arduino is little-endian too.
+// May need to reverse subscript order if porting elsewhere.
+
+uint16_t read16(File f) {
+  uint16_t result;
+  ((uint8_t *)&result)[0] = f.read(); // LSB
+  ((uint8_t *)&result)[1] = f.read(); // MSB
+  return result;
+}
+
+uint32_t read32(File f) {
+  uint32_t result;
+  ((uint8_t *)&result)[0] = f.read(); // LSB
+  ((uint8_t *)&result)[1] = f.read();
+  ((uint8_t *)&result)[2] = f.read();
+  ((uint8_t *)&result)[3] = f.read(); // MSB
+  return result;
+}
+
+
+PImage PImage::loadImage(const char * fileName) {
+  File     bmpFile;
+  int      bmpWidth, bmpHeight;   // W+H in pixels
+  uint8_t  bmpDepth;              // Bit depth (currently must be 24)
+  uint32_t bmpImageoffset;        // Start of image data in file
+  uint32_t rowSize;               // Not always = bmpWidth; may have padding
+  bool     flip    = true;        // BMP is stored bottom-to-top
+
+
+  // Open requested file on SD card
+  if ((bmpFile = SD.open(fileName)) == NULL) {
+    Serial.print("loadImage: file not found: ");
+    Serial.println(fileName);
+    return PImage(); // load error
+  }
+  
+  
+  
+  // Parse BMP header
+  if(read16(bmpFile) != 0x4D42) { // BMP signature
+    Serial.println("loadImage: file doesn't look like a BMP");
+    return PImage();
+  }
+  
+  Serial.print("File size: "); Serial.println(read32(bmpFile));
+  (void)read32(bmpFile); // Read & ignore creator bytes
+  bmpImageoffset = read32(bmpFile); // Start of image data
+  Serial.print("Image Offset: "); Serial.println(bmpImageoffset, DEC);
+  // Read DIB header
+  Serial.print("Header size: "); Serial.println(read32(bmpFile));
+  bmpWidth  = read32(bmpFile);
+  bmpHeight = read32(bmpFile);
+  if(read16(bmpFile) != 1) { // # planes -- must be '1'
+    Serial.println("loadImage: invalid n. of planes");
+    return PImage();
+  }
+  
+  bmpDepth = read16(bmpFile); // bits per pixel
+  Serial.print("Bit Depth: "); Serial.println(bmpDepth);
+  if((bmpDepth != 24) || (read32(bmpFile) != 0)) { // 0 = uncompressed {
+    Serial.println("loadImage: invalid pixel format");
+    return PImage();
+  }
+
+  Serial.print("Image size: ");
+  Serial.print(bmpWidth);
+  Serial.print('x');
+  Serial.println(bmpHeight);
+
+  // BMP rows are padded (if needed) to 4-byte boundary
+  rowSize = (bmpWidth * 3 + 3) & ~3;
+
+  // If bmpHeight is negative, image is in top-down order.
+  // This is not canon but has been observed in the wild.
+  if(bmpHeight < 0) {
+    bmpHeight = -bmpHeight;
+    flip      = false;
+  }
+  
+  return PImage(bmpFile, bmpWidth, bmpHeight, bmpDepth, bmpImageoffset, rowSize, flip);
+}
+
+#endif
 
 
 

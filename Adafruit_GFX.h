@@ -24,6 +24,36 @@
  #include "WProgram.h"
 #endif
 
+/*
+ * This library can work with or without the presence of an SD
+ * reading library (to load images). At the moment, only the
+ * Sparkfun's SD library is supported; it is included in
+ * standard Arduino libraries.
+ * 
+ * The presence of the SD library is detected by looking at the
+ * __SD_H__ preprocessor variable, defined into 
+ * Sparkfun's SD library to avoid double inclusion. This means
+ * that in order to use the image-related API of Adafruit_GFX,
+ * SD.h *must* be included before Adafruit_GFX.
+ * 
+ * The bottom part of this include file contains the actual image
+ * loading code; if it was in a separate .cpp file, there were no
+ * way to check if the SD library was present or not.
+ * 
+ * A partial solution was to include SD.h anyway, see if that works
+ * (i.e. it is found in the include search path) and act accordingly.
+ * But this solution relied on the preprocessor to issue only a
+ * warning when an include file is not found. Avr-gcc, used for
+ * Arduino 8-bit MCUs, does that, but the standard gcc-4.4, used for
+ * Arduino Due, issues a fatal error and stops compilation.
+ * 
+ * The best solution so far is to put the code here. It works if this
+ * include is used only in one .cpp file in the build (this is the
+ * case of most Arduino sketches); if used in multiple .cpp files,
+ * the linker may complain about duplicate definitions.
+ * 
+ */
+
 #if defined(__SD_H__)  // Sparkfun's SD library
 #  include "PImage.h"
 #else

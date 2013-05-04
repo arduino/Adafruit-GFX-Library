@@ -52,6 +52,9 @@ private:
   _valid(true) // since Adafruit_GFX is friend, we could just let it write the variables and save some CPU cycles
   { }
   
+  static uint16_t read16(File f);
+  static uint32_t read32(File f);
+  
   // TODO close the file in ~PImage and PImage(const PImage&)
 
 };

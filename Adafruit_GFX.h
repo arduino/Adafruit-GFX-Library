@@ -27,12 +27,12 @@
 /*
  * This library can work with or without the presence of an SD
  * reading library (to load images). At the moment, only the
- * Sparkfun's SD library is supported; it is included in
+ * Arduino SD library is supported; it is included in
  * standard Arduino libraries.
  * 
  * The presence of the SD library is detected by looking at the
  * __SD_H__ preprocessor variable, defined into 
- * Sparkfun's SD library to avoid double inclusion. This means
+ * Arduino SD library to avoid double inclusion. This means
  * that in order to use the image-related API of Adafruit_GFX,
  * SD.h *must* be included before Adafruit_GFX.
  * 
@@ -54,7 +54,7 @@
  * 
  */
 
-#if defined(__SD_H__)  // Sparkfun's SD library
+#if defined(__SD_H__)  // Arduino SD library
 #  include "PImage.h"
 #else
 #  warning "The SD library was not found. loadImage() and image() won't be supported."
@@ -192,7 +192,7 @@ class Adafruit_GFX : public Print {
   void popStyle();
   */
 
-#if defined(__SD_H__)  // Sparkfun's SD library
+#if defined(__SD_H__)  // Arduino SD library
   PImage loadImage(const char * fileName) { return PImage::loadImage(fileName); }
   
   void image(PImage & img, uint16_t x, uint16_t y);
@@ -217,7 +217,7 @@ class Adafruit_GFX : public Print {
   bool useFill;
 };
 
-#if defined(__SD_H__)  // Sparkfun's SD library
+#if defined(__SD_H__)  // Arduino SD library
 
 #define BUFFPIXEL 20
 

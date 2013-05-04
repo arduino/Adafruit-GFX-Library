@@ -5,7 +5,7 @@
 
 class Adafruit_GFX;
 
-#if defined(__SD_H__)  // Sparkfun's SD library
+#if defined(__SD_H__)  // Arduino SD library
 
 
 /// This class mimics Processing's PImage, but with fewer

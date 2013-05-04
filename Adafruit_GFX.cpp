@@ -611,7 +611,7 @@ void Adafruit_GFX::triangle(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int1
   }
 }
 
-#if defined(__SD_H__)  // Sparkfun's SD library
+#if defined(__SD_H__)  // Arduino SD library
 
 #define BUFFPIXEL 20
 

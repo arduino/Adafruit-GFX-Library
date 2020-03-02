@@ -658,7 +658,7 @@ void Adafruit_GFX::image(PImage & img, uint16_t x, uint16_t y) {
 
       // Convert pixel from BMP to TFT format, push to display
       b = sdbuffer[buffidx++];
-      g = sdbuffer[buffidx++];
+      g = sdbuffer[buffidx++];// out of bound condition can be attached 
       r = sdbuffer[buffidx++];
       //pushColor(tft.Color565(r,g,b));
       drawPixel(x + col, y + row, newColor(r, g, b));
